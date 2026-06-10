@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operaciones analista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- SPLASH SCREEN DE 2 SEGUNDOS -->
+  <div id="splashScreen" style="position: fixed; inset: 0; background: #0e72ed; z-index: 100000; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; opacity: 1;">
+    <!-- Fase 1: Logo (0s - 1s) -->
+    <div id="splashPhase1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; transition: opacity 0.3s ease; opacity: 1;">
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif;">
+        <div style="display: flex; align-items: center; font-family: 'Fredoka', sans-serif;">
+          <span style="font-size: 5.5rem; font-weight: 700; color: white; line-height: 1; margin-right: -4px;">Σ</span>
+          <span style="font-size: 5.5rem; font-weight: 700; color: white; line-height: 1; letter-spacing: -1px;">fectiva</span>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: white; font-family: 'Fredoka', sans-serif; margin-top: 6px; opacity: 0.95; letter-spacing: 0.5px;">Tu financiera</div>
+      </div>
+    </div>
+    
+    <!-- Fase 2: Icono Vehículo + Texto (1s - 2s) -->
+    <div id="splashPhase2" style="position: absolute; display: none; align-items: center; justify-content: center; gap: 20px; transition: opacity 0.3s ease; opacity: 0;">
+      <svg viewBox="0 0 24 24" style="width: 72px; height: 72px; fill: white;">
+        <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5H6.5c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 6h11l1.4 4H5.1L6.5 6zM5 17c-.83 0-1.5-.67-1.5-1.5S4.17 14 5 14s1.5.67 1.5 1.5S5.83 17 5 17zm14 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+      </svg>
+      <span style="color: white; font-size: 2.8rem; font-weight: 700; font-family: 'Inter', sans-serif; letter-spacing: -0.03em; white-space: nowrap;">Crédito vehicular</span>
+    </div>
+  </div>
+
+  <!-- PANTALLA DE LOGIN -->
+  <div id="loginView" class="login-overlay hidden">
+    <div class="login-card">
+      <div style="display: flex; flex-direction: column; align-items: center; font-family: 'Fredoka', sans-serif;">
+        <div style="display: flex; align-items: center;">
+          <span style="font-size: 4rem; font-weight: 700; color: #0054D1; line-height: 1; margin-right: -4px;">Σ</span>
+          <span style="font-size: 4rem; font-weight: 700; color: #003DA5; line-height: 1; letter-spacing: -1px;">fectiva</span>
+        </div>
+        <div style="font-size: 1.3rem; font-weight: 600; color: #003DA5; margin-top: 4px; letter-spacing: 0.5px; opacity: 0.9;">Tu financiera</div>
+      </div>
+
+      <div class="login-header">
+        <h2>Iniciar Sesión</h2>
+        <p>Módulo de operaciones · Crédito vehicular</p>
+      </div>
+
+      <div class="login-form">
+        <div class="login-field">
+          <label for="loginUser">Usuario</label>
+          <input type="text" id="loginUser" placeholder="Ingrese su usuario" autocomplete="username" />
+        </div>
+        <div class="login-field">
+          <label for="loginPass">Contraseña</label>
+          <input type="password" id="loginPass" placeholder="Ingrese su contraseña" autocomplete="current-password" />
+        </div>
+      </div>
+
+      <div class="login-actions">
+        <button type="button" id="btnLoginSubmit" class="btn primary">Iniciar sesión</button>
+        <button type="button" id="btnLoginClear" class="btn secondary" style="background: #94a3b8;">Limpiar</button>
+      </div>
+
+      <div class="login-footer">
+        <a href="#" id="forgotPasswordBtn">¿Olvidó su contraseña?</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP PERSONALIZADO DE LOGIN -->
+  <div id="loginAlertModal" class="success-overlay hidden" role="dialog" aria-modal="true" style="z-index: 100000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; position: fixed; inset: 0;">
+    <div class="success-dialog" style="background: white; padding: 32px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow-xl); border: 1px solid var(--line);">
+      <div id="loginAlertIcon" class="success-dialog-icon" style="background: #fee2e2; color: #ef4444; margin: 0 auto 16px auto; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">⚠</div>
+      <h2 id="loginAlertTitle" style="color: var(--blue-dark); font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Error</h2>
+      <p id="loginAlertMessage" style="color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5;">Usuario o contraseña mal ingresados o no existen</p>
+      <button type="button" id="closeLoginAlertModal" class="btn primary" style="width: 100%; border-radius: var(--radius-sm);">Aceptar</button>
+    </div>
+  </div>
+
+  <header class="topbar hidden">
+    <div class="brand">Efectiva <small>Tu financiera</small></div>
+    <div class="user-box">
+      <span class="role">ANALISTA VALIDACIONES</span>
+      <span class="hello">Hola usuario!</span>
+      <span class="chevron"></span>
+    </div>
+  </header>
+
+  <main class="layout hidden">
+    <section id="bandejaView">
+      <section class="page-title">
+        <div>
+          <p class="eyebrow">Módulo de validaciones</p>
+          <h1>Bandeja</h1>
+        </div>
+        <div class="kpi-card">
+          <span>Total solicitudes</span>
+          <strong id="totalCases">0</strong>
+        </div>
+      </section>
+
+      <section class="card search-card">
+        <div class="card-title">
+          <h2>Búsqueda</h2>
+          <p>Filtra solicitudes pendientes de validación documental, garantía, seguro y formalización.</p>
+        </div>
+
+        <div class="filters-grid">
+          <label>Solicitud
+            <input id="filterSolicitud" type="text" placeholder="Ej. EFE001" />
+          </label>
+          <label>N° Documento
+            <input id="filterDocumento" type="text" placeholder="Ej. 12345678" maxlength="12" />
+          </label>
+          <label>Concesionario
+            <select id="filterConcesionario"><option value="">Seleccionar</option></select>
+          </label>
+          <label>Tienda
+            <select id="filterTienda"><option value="">Seleccionar</option></select>
+          </label>
+          <label>Usuario
+            <input id="filterUsuario" type="text" placeholder="Ej. jpardol" />
+          </label>
+          <label>Carretera
+            <select id="filterCarretera"><option value="">Seleccionar</option></select>
+          </label>
+          <label>Estado
+            <select id="filterEstado"><option value="">Seleccionar</option></select>
+          </label>
+          <label>Fecha desde
+            <input id="filterFechaDesde" type="date" />
+          </label>
+          <label>Fecha hasta
+            <input id="filterFechaHasta" type="date" />
+          </label>
+          <div class="filter-actions">
+            <button id="btnLimpiar" class="btn secondary" type="button">Limpiar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="table-header">
+          <h2>Solicitudes asignadas</h2>
+          <span id="resultCount">0 resultados</span>
+        </div>
+
+        <div class="responsive-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Solicitud</th>
+                <th>Nombre cliente</th>
+                <th>N° documento</th>
+                <th>Concesionario</th>
+                <th>Tienda</th>
+                <th>Usuario</th>
+                <th>Carretera</th>
+                <th>Fecha de recepción</th>
+                <th>Estado</th>
+                <th>SLA</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="gridBody"></tbody>
+          </table>
+        </div>
+
+        <div id="summary" class="summary"></div>
+      </section>
+    </section>
+
+    <section id="detailView" class="hidden">
+      <section class="detail-header">
+        <div>
+          <button id="backToInbox" class="back-link" type="button">← Regresar a bandeja</button>
+          <h1 id="detailHeaderTitle">Validación de solicitud</h1>
+          <p id="detailSubtitle">Solicitud pendiente de revisión documental.</p>
+        </div>
+        <div class="detail-header-chips" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <div class="request-chip">
+            <small>Solicitud</small>
+            <strong id="detailSolicitud">-</strong>
+          </div>
+          <div class="request-chip">
+            <small>Carretera</small>
+            <strong id="detailCarretera">-</strong>
+          </div>
+          <div class="request-chip">
+            <small>SLA</small>
+            <strong id="detailSLA">-</strong>
+          </div>
+        </div>
+      </section>
+
+      <div class="ops-main-layout">
+        <!-- Main: Panels de Etapas -->
+        <div class="ops-main-panel">
+          <!-- PANEL ETAPA A: Checklist 2 y Datos bloqueados -->
+          <div id="stageAPanel">
+            <!-- Pestañas (Tabs) estilo imagen -->
+            <div class="ops-section-tabs">
+              <button class="ops-tab-btn active" data-ops-tab="vehiculo" type="button">
+                <span class="ops-tab-num">01</span>
+                <span class="ops-tab-title">Datos de Vehículo</span>
+                <span class="ops-tab-desc">Detalles de la unidad</span>
+              </button>
+              <button class="ops-tab-btn" data-ops-tab="domicilio" type="button">
+                <span class="ops-tab-num">02</span>
+                <span class="ops-tab-title">Verificación Domiciliaria</span>
+                <span class="ops-tab-desc">Resultado Verifed</span>
+              </button>
+              <button class="ops-tab-btn" data-ops-tab="cliente" type="button">
+                <span class="ops-tab-num">03</span>
+                <span class="ops-tab-title">Datos de Cliente</span>
+                <span class="ops-tab-desc">Información del solicitante</span>
+              </button>
+              <button class="ops-tab-btn" data-ops-tab="riesgos" type="button">
+                <span class="ops-tab-num">04</span>
+                <span class="ops-tab-title">Resultado de Riesgos</span>
+                <span class="ops-tab-desc">Historial de aprobación</span>
+              </button>
+            </div>
+
+            <!-- Contenido de las pestañas (bloqueado) -->
+            <section class="card ops-tab-content-card">
+              <div id="opsTabContent">
+                <!-- Se genera dinámicamente -->
+              </div>
+            </section>
+
+            <!-- CHECKLIST 2 – CARGA DE DOCUMENTOS FIRMADOS -->
+            <section class="checklist-fixed card" style="margin-top: 24px;">
+              <div class="table-header">
+                <div>
+                  <h2>Checklist 2 – Carga de documentos firmados</h2>
+                  <p>Valida la conformidad de los documentos firmados y cargados por el ejecutivo.</p>
+                </div>
+                <span id="checklistStatusBadge" class="check-badge pending">Pendiente de revisión</span>
+              </div>
+              <div class="responsive-table">
+                <table class="checklist-table">
+                  <thead>
+                    <tr>
+                      <th>N°</th>
+                      <th>Documento</th>
+                      <th>Origen</th>
+                      <th>Estado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="checklistBody"></tbody>
+                </table>
+              </div>
+              
+              <!-- Comentarios del Checklist 2 -->
+              <div class="executive-comment-section" style="margin-top: 20px; border-top: 1.5px solid #f1f5f9; padding-top: 16px;">
+                <label id="executiveCommentLabel" style="font-weight: 800; color: #003893; font-size: 14px; display: block; margin-bottom: 8px;">Comentarios del Ejecutivo Financiero [Nombre del ejecutivo]</label>
+                <textarea readonly style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; background: #f8fafc; color: #475569; resize: none;" rows="2">Todos los documentos fueron firmados y cargados correctamente para su pase a operaciones.</textarea>
+              </div>
+            </section>
+
+            <!-- OBSERVACIONES OPERACIONES & ACCIONES -->
+            <section class="card info-card-ops" style="margin-top: 24px;">
+              <div class="card-header-ops">
+                <h3>Observaciones Operaciones</h3>
+                <p>Registre aquí sus observaciones antes de derivar o rechazar.</p>
+              </div>
+              <div class="observation-textarea-wrapper" style="margin-top: 14px;">
+                <textarea id="opsObservationText" rows="4" style="width: 100%; border: 1.5px solid #c5cad6; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; resize: vertical;" placeholder="Ej. Falta contrato de garantía firmado por el titular."></textarea>
+              </div>
+              
+              <div class="ops-actions-wrapper" style="display: flex; gap: 14px; margin-top: 20px; flex-wrap: wrap;">
+                <button id="btnAprobarActivarBantotal" class="btn primary" type="button" style="height: 48px; font-size: 14px; font-weight: 800; min-width: 250px;">
+                  ✓ APROBAR Y ACTIVAR EN BANTOTAL
+                </button>
+                <button id="btnObservarOperaciones" class="btn secondary" type="button" style="height: 48px; font-size: 14px; font-weight: 800; background: #ef4444; color: white; border: none; cursor: pointer; border-radius: 13px; min-width: 150px;">
+                  ⚠ OBSERVAR
+                </button>
+                <button id="btnRegresarBandejaOps" class="btn outline" type="button" style="height: 48px; font-size: 14px; color: var(--blue-dark); border-color: var(--blue); min-width: 120px;">
+                  Regresar
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <!-- PANEL ETAPA B: Activación Bantotal -->
+          <div id="stageBPanel" class="hidden">
+            <!-- Datos enviados a Bantotal para activación -->
+            <section id="bantotalSection" class="card bantotal-card">
+              <div class="table-header">
+                <div>
+                  <h2>Datos enviados a Bantotal para activación</h2>
+                  <p>Información consolidada de la solicitud enviada a Bantotal para la activación del crédito.</p>
+                </div>
+              </div>
+
+              <div class="bantotal-grid">
+                <label>ID Solicitud
+                  <input type="text" id="btSolicitud" readonly />
+                </label>
+                <label>Tipo de documento
+                  <input type="text" id="btTipoDoc" readonly value="DNI" />
+                </label>
+                <label>N° de documento
+                  <input type="text" id="btNumDoc" readonly />
+                </label>
+                <label>Nombre Cliente
+                  <input type="text" id="btCliente" readonly />
+                </label>
+                <label>Producto
+                  <input type="text" id="btProducto" readonly value="Crédito vehicular PN" />
+                </label>
+                <label>Monto financiado
+                  <input type="text" id="btMonto" readonly />
+                </label>
+                <label>Plazo
+                  <input type="text" id="btPlazo" readonly />
+                </label>
+                <label>Cuota
+                  <input type="text" id="btCuota" readonly />
+                </label>
+                <label>Tasa (TEA)
+                  <input type="text" id="btTasa" readonly />
+                </label>
+                <label>Moneda
+                  <input type="text" id="btMoneda" readonly />
+                </label>
+                <label>Vehículo
+                  <input type="text" id="btVehiculo" readonly />
+                </label>
+                <label>Estado
+                  <input type="text" id="btEstado" readonly />
+                </label>
+                <label>Marca
+                  <input type="text" id="btMarca" readonly />
+                </label>
+                <label>Modelo
+                  <input type="text" id="btModelo" readonly />
+                </label>
+                <label>Año modelo
+                  <input type="text" id="btAnioModelo" readonly />
+                </label>
+                <label>Tipo de vehículo
+                  <input type="text" id="btTipoVehiculo" readonly value="Camioneta SUV" />
+                </label>
+                <label>N° motor
+                  <input type="text" id="btNumMotor" readonly value="2GD-FTV-987654" />
+                </label>
+                <label>VIN *
+                  <input type="text" id="btVin" readonly />
+                </label>
+              </div>
+            </section>
+
+            <!-- Resultado esperado de activación -->
+            <section id="activationResultSection" class="card activation-result-card">
+              <div class="table-header">
+                <div>
+                  <h2>Resultado esperado de activación</h2>
+                </div>
+              </div>
+
+              <div class="bantotal-success-banner">
+                <span class="success-check">✓</span> Operación creada exitosamente en Bantotal
+              </div>
+
+              <div class="bantotal-grid">
+                <label>N° operación Bantotal
+                  <input type="text" id="arOperacion" readonly />
+                </label>
+                <label>Fecha / hora de activación
+                  <input type="text" id="arFechaHora" readonly />
+                </label>
+                <label>Monto activado
+                  <input type="text" id="arMonto" readonly />
+                </label>
+                <label>Tasa (TEA)
+                  <input type="text" id="arTasa" readonly />
+                </label>
+              </div>
+
+              <!-- Cronograma Final Integrado -->
+              <div class="cronograma-details-wrapper" style="margin-top: 24px; border-top: 1.5px solid #f1f5f9; padding-top: 20px;">
+                <div class="table-header">
+                  <div>
+                    <h3>🗓 Cronograma Final</h3>
+                  </div>
+                </div>
+
+                <div class="responsive-table">
+                  <table class="cronograma-table">
+                    <thead>
+                      <tr>
+                        <th>N° Cuota</th>
+                        <th>Fecha de Pago</th>
+                        <th>Importe Cuota (S/)</th>
+                        <th>Amortización (S/)</th>
+                        <th>Interés (S/)</th>
+                        <th>Seguro (S/)</th>
+                        <th>Total Cuota (S/)</th>
+                        <th>Saldo Capital (S/)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cronogramaBody"></tbody>
+                  </table>
+                </div>
+
+                <div class="cronograma-footer-grid">
+                  <div class="footer-kpi">
+                    <small>Total amortización:</small>
+                    <strong id="cronAmortizacion">S/ 138,000.00</strong>
+                  </div>
+                  <div class="footer-kpi">
+                    <small>Total interés:</small>
+                    <strong id="cronInteres">S/ 10,428.00</strong>
+                  </div>
+                  <div class="footer-kpi">
+                    <small>Total seguro:</small>
+                    <strong id="cronSeguro">S/ 3,312.00</strong>
+                  </div>
+                  <div class="footer-kpi">
+                    <small>Monto financiado:</small>
+                    <strong id="cronMontoFinanciado">S/ 138,000.00</strong>
+                  </div>
+                  <div class="footer-kpi">
+                    <small>Total a pagar:</small>
+                    <strong id="cronTotalPagar">S/ 151,740.00</strong>
+                  </div>
+                  <div class="footer-kpi">
+                    <small>Cuotas:</small>
+                    <strong id="cronCuotasCount">36</strong>
+                  </div>
+                </div>
+
+                <div class="cronograma-actions-bottom">
+                  <button id="btnDescargarCronograma" class="btn outline" type="button">
+                    ↓ Descargar Cronograma
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Datos de salida para orden de pago -->
+            <section id="paymentOrderSection" class="card payment-order-card">
+              <div class="table-header">
+                <div>
+                  <h2>Datos de salida para orden de pago</h2>
+                </div>
+              </div>
+
+              <div class="bantotal-grid">
+                <label>Concesionario
+                  <input type="text" id="poConcesionario" readonly placeholder="Nombre concesionario" />
+                </label>
+                <label>Cliente
+                  <input type="text" id="poCliente" readonly placeholder="Nombre cliente" />
+                </label>
+                <label>Tipo / N° documento
+                  <input type="text" id="poDocumento" readonly placeholder="DNI / CE — número" />
+                </label>
+                <label>N° solicitud
+                  <input type="text" id="poSolicitud" readonly placeholder="Ej. EFE001" />
+                </label>
+                <label>Precio del vehículo
+                  <input type="text" id="poPrecioVehiculo" readonly placeholder="USD ___,___" />
+                </label>
+                <label>Cuota inicial
+                  <input type="text" id="poCuotaInicial" readonly placeholder="USD ___,___" />
+                </label>
+                <label>Monto a desembolsar (USD)
+                  <input type="text" id="poMontoDesembolsar" readonly placeholder="USD ___,___" />
+                </label>
+                <label>N° de cuenta
+                  <input type="text" id="poNumCuenta" readonly placeholder="Número cuenta concesionario" />
+                </label>
+                <label>Banco
+                  <input type="text" id="poBanco" readonly placeholder="Banco concesionario" />
+                </label>
+              </div>
+
+              <div class="payment-order-actions" style="margin-top: 18px;">
+                <button id="btnGenerarOrdenPago" class="btn primary" type="button">Generar salida para orden de pago</button>
+              </div>
+            </section>
+
+            <!-- Botón de regreso -->
+            <div style="margin-top: 24px; margin-bottom: 24px; display: flex; justify-content: flex-start;">
+              <button id="btnRegresarBandejaActivacion" class="btn outline" type="button" style="height: 48px; font-size: 14px; color: var(--blue-dark); border-color: var(--blue); min-width: 120px;">
+                Regresar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar: Tracking Historial -->
+        <aside class="tracking-panel">
+          <h2>Tracking historial</h2>
+          <div id="trackingList" class="tracking-list">
+             <!-- timelines generated by JS -->
+          </div>
+        </aside>
+      </div>
+
+
+
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" style="z-index: 100000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+    <div class="modal-card" style="background: white; padding: 32px; border-radius: 20px; width: 90%; max-width: 420px; text-align: center; box-shadow: var(--shadow-xl); border: 1px solid var(--line); position: relative;">
+      <button id="closeModal" class="modal-close" type="button" style="position: absolute; right: 20px; top: 16px; border: 0; background: transparent; font-size: 28px; cursor: pointer; color: #64748b;">×</button>
+      <div id="modalIcon" style="background: #e0f2fe; color: #0284c7; margin: 0 auto 16px auto; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">?</div>
+      <h3 id="modalTitle" style="color: var(--blue-dark); font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Aviso</h3>
+      <div id="modalContent" style="color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5;"></div>
+      <div id="modalActions" style="display: flex; gap: 12px; justify-content: center;">
+        <button id="cancelModal" class="btn secondary" type="button" style="width: 100%; border-radius: var(--radius-sm); background: #e2e8f0; color: #475569;">Cancelar</button>
+        <button id="acceptModal" class="btn primary" type="button" style="width: 100%; border-radius: var(--radius-sm); margin: 0;">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Vista Previa de Documento -->
+  <div id="docPreviewModal" class="modal hidden" role="dialog" aria-modal="true" style="z-index: 100000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+    <div class="modal-card" style="width: min(700px, 95%); max-height: 90vh; display: flex; flex-direction: column; padding: 24px; text-align: left; background: white; border-radius: 20px; border: 1px solid var(--line);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 14px; margin-bottom: 16px;">
+        <h3 id="previewModalTitle" style="margin: 0; color: #002d72; font-size: 18px; font-weight: 800;">Vista Previa</h3>
+        <button id="closePreviewModal" style="border: 0; background: transparent; font-size: 28px; cursor: pointer; color: #64748b;">×</button>
+      </div>
+      
+      <div id="previewModalBody" style="flex-grow: 1; overflow-y: auto; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 30px; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px;">
+        <svg viewBox="0 0 24 24" style="width: 64px; height: 64px; fill: #0054D1;">
+          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+        </svg>
+        <div style="text-align: center;">
+          <h4 id="previewDocName" style="margin: 0 0 4px 0; color: #1e293b; font-size: 15px; font-weight: 700;">Documento</h4>
+          <p style="margin: 0; color: #64748b; font-size: 13px;">Expediente digital verificado y firmado correctamente.</p>
+        </div>
+        
+        <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+          <div style="height: 10px; background: #e2e8f0; border-radius: 4px; width: 90%;"></div>
+          <div style="height: 10px; background: #e2e8f0; border-radius: 4px; width: 75%;"></div>
+          <div style="height: 10px; background: #e2e8f0; border-radius: 4px; width: 85%;"></div>
+          <div style="height: 10px; background: #e2e8f0; border-radius: 4px; width: 60%;"></div>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button id="btnDescargarPreview" class="btn primary" type="button" style="height: 40px; font-size: 13.5px; min-width: 130px;">↓ Descargar PDF</button>
+        <button id="btnCerrarPreview" class="btn secondary" type="button" style="height: 40px; font-size: 13.5px; background: #e2e8f0; color: #475569; min-width: 100px;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
