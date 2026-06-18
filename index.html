@@ -83,7 +83,7 @@
   <header class="topbar hidden">
     <div class="brand">Efectiva <small>Tu financiera</small></div>
     <div class="user-box">
-      <span class="role">ANALISTA VALIDACIONES</span>
+      <span class="role">ANALISTA OPERACIONES</span>
       <span class="hello">Hola usuario!</span>
       <span class="chevron"></span>
     </div>
@@ -93,8 +93,8 @@
     <section id="bandejaView">
       <section class="page-title">
         <div>
-          <p class="eyebrow">Módulo de validaciones</p>
-          <h1>Bandeja</h1>
+          <p class="eyebrow">Módulo de operaciones</p>
+          <h1>Solicitudes</h1>
         </div>
         <div class="kpi-card">
           <span>Total solicitudes</span>
@@ -105,7 +105,7 @@
       <section class="card search-card">
         <div class="card-title">
           <h2>Búsqueda</h2>
-          <p>Filtra solicitudes pendientes de validación documental, garantía, seguro y formalización.</p>
+          <p>Filtra las solicitudes aprobadas por Riesgos y pendientes de toma por Operaciones.</p>
         </div>
 
         <div class="filters-grid">
@@ -118,14 +118,11 @@
           <label>Concesionario
             <select id="filterConcesionario"><option value="">Seleccionar</option></select>
           </label>
-          <label>Tienda
-            <select id="filterTienda"><option value="">Seleccionar</option></select>
-          </label>
-          <label>Usuario
+          <label>Ejecutivo
             <input id="filterUsuario" type="text" placeholder="Ej. jpardol" />
           </label>
-          <label>Carretera
-            <select id="filterCarretera"><option value="">Seleccionar</option></select>
+          <label>Analista
+            <select id="filterAnalista"><option value="">Seleccionar</option></select>
           </label>
           <label>Estado
             <select id="filterEstado"><option value="">Seleccionar</option></select>
@@ -144,7 +141,7 @@
 
       <section class="card table-card">
         <div class="table-header">
-          <h2>Solicitudes asignadas</h2>
+          <h2>Bandeja general de operaciones</h2>
           <span id="resultCount">0 resultados</span>
         </div>
 
@@ -156,12 +153,10 @@
                 <th>Nombre cliente</th>
                 <th>N° documento</th>
                 <th>Concesionario</th>
-                <th>Tienda</th>
-                <th>Usuario</th>
-                <th>Carretera</th>
+                <th>Ejecutivo</th>
+                <th>Analista</th>
                 <th>Fecha de recepción</th>
                 <th>Estado</th>
-                <th>SLA</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -178,7 +173,7 @@
         <div>
           <button id="backToInbox" class="back-link" type="button">← Regresar a bandeja</button>
           <h1 id="detailHeaderTitle">Validación de solicitud</h1>
-          <p id="detailSubtitle">Solicitud pendiente de revisión documental.</p>
+          <p id="detailSubtitle">Solicitud pendiente de validación operativa.</p>
         </div>
         <div class="detail-header-chips" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
           <div class="request-chip">
@@ -203,31 +198,42 @@
           <div id="stageAPanel">
             <!-- Pestañas (Tabs) estilo imagen -->
             <div class="ops-section-tabs">
-              <button class="ops-tab-btn active" data-ops-tab="vehiculo" type="button">
+              <button class="ops-tab-btn active" data-ops-tab="domicilio" type="button">
                 <span class="ops-tab-num">01</span>
-                <span class="ops-tab-title">Datos de Vehículo</span>
-                <span class="ops-tab-desc">Detalles de la unidad</span>
-              </button>
-              <button class="ops-tab-btn" data-ops-tab="domicilio" type="button">
-                <span class="ops-tab-num">02</span>
                 <span class="ops-tab-title">Verificación Domiciliaria</span>
                 <span class="ops-tab-desc">Resultado Verifed</span>
               </button>
-              <button class="ops-tab-btn" data-ops-tab="cliente" type="button">
-                <span class="ops-tab-num">03</span>
-                <span class="ops-tab-title">Datos de Cliente</span>
-                <span class="ops-tab-desc">Información del solicitante</span>
-              </button>
               <button class="ops-tab-btn" data-ops-tab="riesgos" type="button">
-                <span class="ops-tab-num">04</span>
+                <span class="ops-tab-num">02</span>
                 <span class="ops-tab-title">Resultado de Riesgos</span>
-                <span class="ops-tab-desc">Historial de aprobación</span>
+                <span class="ops-tab-desc">Historial de evaluación</span>
+              </button>
+              <button class="ops-tab-btn" data-ops-tab="comerciales" type="button">
+                <span class="ops-tab-num">03</span>
+                <span class="ops-tab-title">Datos Comerciales</span>
+                <span class="ops-tab-desc">Comercial, crédito, gastos y seguros</span>
+              </button>
+              <button class="ops-tab-btn" data-ops-tab="cliente" type="button">
+                <span class="ops-tab-num">04</span>
+                <span class="ops-tab-title">Datos de Cliente</span>
+                <span class="ops-tab-desc">Cliente, laborales y cónyuge</span>
               </button>
             </div>
 
             <!-- Contenido de las pestañas (bloqueado) -->
             <section class="card ops-tab-content-card">
               <div id="opsTabContent">
+                <!-- Se genera dinámicamente -->
+              </div>
+            </section>
+
+            <!-- DATOS DE GARANTÍA -->
+            <section class="card" style="margin-top: 24px;">
+              <div class="card-header-ops" style="border-bottom: 1.5px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #002d72; font-size: 1.4rem; font-weight: 800;">Datos de garantía</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.9rem;">Información técnica y características de la unidad de garantía.</p>
+              </div>
+              <div id="opsDatosGarantiaContent" class="ops-tab-grid">
                 <!-- Se genera dinámicamente -->
               </div>
             </section>
@@ -247,7 +253,6 @@
                     <tr>
                       <th>N°</th>
                       <th>Documento</th>
-                      <th>Origen</th>
                       <th>Estado</th>
                       <th>Acción</th>
                     </tr>
@@ -269,9 +274,7 @@
                 <h3>Observaciones Operaciones</h3>
                 <p>Registre aquí sus observaciones antes de derivar o rechazar.</p>
               </div>
-              <div class="observation-textarea-wrapper" style="margin-top: 14px;">
-                <textarea id="opsObservationText" rows="4" style="width: 100%; border: 1.5px solid #c5cad6; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; resize: vertical;" placeholder="Ej. Falta contrato de garantía firmado por el titular."></textarea>
-              </div>
+              <div id="opsObservationDisplayContainer" style="margin-top: 14px;"></div>
               
               <div class="ops-actions-wrapper" style="display: flex; gap: 14px; margin-top: 20px; flex-wrap: wrap;">
                 <button id="btnAprobarActivarBantotal" class="btn primary" type="button" style="height: 48px; font-size: 14px; font-weight: 800; min-width: 250px;">
@@ -551,6 +554,43 @@
       <div style="display: flex; justify-content: flex-end; gap: 12px;">
         <button id="btnDescargarPreview" class="btn primary" type="button" style="height: 40px; font-size: 13.5px; min-width: 130px;">↓ Descargar PDF</button>
         <button id="btnCerrarPreview" class="btn secondary" type="button" style="height: 40px; font-size: 13.5px; background: #e2e8f0; color: #475569; min-width: 100px;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Observación -->
+  <div id="observarModal" class="modal hidden" role="dialog" aria-modal="true" style="z-index: 100000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+    <div class="modal-card" style="background: white; padding: 24px; border-radius: 20px; width: 90%; max-width: 500px; text-align: left; box-shadow: var(--shadow-xl); border: 1px solid var(--line); position: relative; margin: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 14px; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: #003893; font-size: 1.3rem; font-weight: 800;">Observar Solicitud</h3>
+        <button id="closeObservarModal" type="button" style="border: 0; background: transparent; font-size: 28px; cursor: pointer; color: #64748b; line-height: 1;">×</button>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label for="observarMotivo" style="display: block; font-weight: 800; font-size: 12px; color: #1e293b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Motivo de la observación *</label>
+        <select id="observarMotivo" style="width: 100%; height: 48px; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 14px; color: #1e293b; background: white; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23003893%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right%2016px%20center; background-size: 10px%20auto;">
+          <option value="">Seleccionar motivo...</option>
+          <option value="OM001 – Documentación contractual incompleta.">OM001 – Documentación contractual incompleta.</option>
+          <option value="OM002 – Documentación contractual inconsistente.">OM002 – Documentación contractual inconsistente.</option>
+          <option value="OM003 – Firma física faltante o inconsistente.">OM003 – Firma física faltante o inconsistente.</option>
+          <option value="OM004 – Firma digital no conforme.">OM004 – Firma digital no conforme.</option>
+          <option value="OM005 – Información de garantía incompleta.">OM005 – Información de garantía incompleta.</option>
+          <option value="OM006 – Información de garantía inconsistente.">OM006 – Información de garantía inconsistente.</option>
+          <option value="OM007 – Póliza o seguro pendiente.">OM007 – Póliza o seguro pendiente.</option>
+          <option value="OM008 – Verificación domiciliaria no conforme.">OM008 – Verificación domiciliaria no conforme.</option>
+          <option value="OM009 – Diferencias respecto a las condiciones aprobadas.">OM009 – Diferencias respecto a las condiciones aprobadas.</option>
+          <option value="OM010 – Documento adicional requerido.">OM010 – Documento adicional requerido.</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <label for="observarComentario" style="display: block; font-weight: 800; font-size: 12px; color: #1e293b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Comentario *</label>
+        <textarea id="observarComentario" rows="4" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; color: #1e293b; resize: none;" placeholder="Ingrese comentarios obligatorios..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1.5px solid #f1f5f9; padding-top: 16px;">
+        <button id="cancelObservarModal" class="btn secondary" type="button" style="height: 44px; padding: 0 24px; border: 1.5px solid #cbd5e1; border-radius: 12px; background: white; color: #475569; font-weight: 800; cursor: pointer; transition: all 0.2s;">Cancelar</button>
+        <button id="confirmObservarModal" class="btn primary" type="button" style="height: 44px; padding: 0 24px; border: none; border-radius: 12px; background: #ea580c; color: white; font-weight: 800; cursor: pointer; transition: all 0.2s;">Confirmar Observación</button>
       </div>
     </div>
   </div>
